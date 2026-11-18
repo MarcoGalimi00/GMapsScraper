@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Scraped data and exports: never committed
+raw/
+out/
+*.jsonl
+*.xlsx
+citta_bbox.json
+
+# Secrets
+.env
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

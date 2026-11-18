@@ -1,0 +1,61 @@
+# =============================================================================
+# gmaps-places-scraper configuration
+# =============================================================================
+# Everything the scraper needs to know lives here: which cities exist, which
+# categories can be searched and how the browser behaves. Nothing about cities
+# or categories is hard-coded in the Python files.
+#
+# To add a city:     add a [cities.<code>] table (tools/find_city_bbox.py prints them).
+# To add a category: add a line under [categories].
+# Then pick them at launch time:
+#     python -m gmaps_scraper --city milan --categories museum park
+
+# -----------------------------------------------------------------------------
+# Scraping behaviour
+# -----------------------------------------------------------------------------
+[settings]
+zoom = 15                  # map zoom of every search (higher = smaller area, more cells)
+overlap = 0.85             # automatic step = overlap x short side of the visible map
+side_panel_px = 408        # ESTIMATED width of the results panel that covers the map
+viewport = { width = 1280, height = 900 }   # browser window size in pixels
+max_scrolls = 40           # safety cap on scrolls per search
+stall_limit = 4            # this many scrolls without new cards = end of list
+scroll_pause_s = 1.5       # wait after each scroll (results load in blocks)
+page_pause_s = [3.0, 7.0]  # random pause between two searches (min, max)
+feed_timeout_ms = 15000    # how long to wait for the result list
+checkpoint_every = 10      # write the partial file every N searches
+output_dir = "raw"         # where the JSONL files are written
+
+# -----------------------------------------------------------------------------
+# Categories: our key = text typed in the Maps search box (in English,
+# because the scraper opens Maps with hl=en and parses English labels).
+# -----------------------------------------------------------------------------
+[categories]
+tourist_attraction = "tourist attraction"
+museum = "museum"
+art_gallery = "art gallery"
+monument = "monument"
+historical_landmark = "historical landmark"
+church = "church"
+park = "park"
+garden = "garden"
+viewpoint = "viewpoint"
+zoo = "zoo"
+amusement_park = "amusement park"
+
+# Named groups, usable at launch: --categories @sights
+[category_groups]
+sights = ["tourist_attraction", "museum", "art_gallery", "monument", "historical_landmark", "church"]
+green = ["park", "garden"]
+
+# -----------------------------------------------------------------------------
+# Cities: bounding box in decimal degrees (south, west, north, east).
+# The box decides the grid of search centres and which places are kept.
+# -----------------------------------------------------------------------------
+[cities.milan]
+name = "Milan, Italy"
+bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
+
+[cities.rome]
+name = "Rome, Italy"
+bbox = { south = 41.79, west = 12.37, north = 41.99, east = 12.62 }   # roughly inside the ring road (GRA)
