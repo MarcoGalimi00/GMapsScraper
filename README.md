@@ -64,6 +64,7 @@ More ways to launch the scraper:
 python -m gmaps_scraper --list                                   # cities, categories, groups in the config
 python -m gmaps_scraper --city milan --categories tourist_attraction --max-cells 2 --center-first   # 2-search smoke test
 python -m gmaps_scraper --city milan --categories @sights        # a group from the config
+python -m gmaps_scraper --city milan --categories @tourism @food # groups from the config
 python -m gmaps_scraper --city milan --categories all            # every category
 python -m gmaps_scraper --city milan --categories museum --dry-run   # show the plan, open nothing
 python -m gmaps_scraper --city turin --bbox 45.00 7.60 45.14 7.75 --categories museum   # a city not in the config
@@ -99,7 +100,9 @@ caffeinate -i python -m gmaps_scraper --city milan --categories all
 
 About 20–35 seconds per search (longer when the list is long). Number of
 searches = cells × categories. Milan (49 cells): one category ≈ 20 minutes,
-all 11 ≈ 4 h 20 min.
+the 11 tourism categories (`@tourism`) ≈ 4 h 20 min; all 20 ≈ 8 h.
+Dense categories such as `restaurant` and `bar` reach Maps' cap of about 120
+results per search in most cells, so in big cities they will be incomplete.
 
 ## Configure
 

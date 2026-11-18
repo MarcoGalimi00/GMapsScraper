@@ -15,7 +15,7 @@ the general rule first, then an **example on Milan** with real numbers.
 opens). `resolve_categories()` turns `museum @green all` into a list of keys.
 `plan_run()` computes the step, the grid and the number of searches.
 
-**Example on Milan** — `--city milan --categories all`: 49 cells × 11 categories = 539 searches.
+**Example on Milan** — `--city milan --categories @tourism`: 49 cells × 11 categories = 539 searches.
 
 ### The automatic step (`geometry.auto_step_km`)
 

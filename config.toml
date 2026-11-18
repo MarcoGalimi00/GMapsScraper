@@ -29,8 +29,10 @@ output_dir = "raw"         # where the JSONL files are written
 # -----------------------------------------------------------------------------
 # Categories: our key = text typed in the Maps search box (in English,
 # because the scraper opens Maps with hl=en and parses English labels).
+# Add any search you like: the key is what you type after --categories.
 # -----------------------------------------------------------------------------
 [categories]
+# Sights and leisure outdoors
 tourist_attraction = "tourist attraction"
 museum = "museum"
 art_gallery = "art gallery"
@@ -43,10 +45,30 @@ viewpoint = "viewpoint"
 zoo = "zoo"
 amusement_park = "amusement park"
 
+# Food and drink (dense: most cells reach the ~120 results cap)
+restaurant = "restaurant"
+bar = "bar"
+
+# Everyday services
+supermarket = "supermarket"
+gas_station = "gas station"
+hospital = "hospital"
+tobacco_shop = "tobacco shop"
+
+# Shopping and entertainment
+shopping_mall = "shopping mall"
+cinema = "movie theater"
+theater = "theater"
+
 # Named groups, usable at launch: --categories @sights
 [category_groups]
+tourism = ["tourist_attraction", "museum", "art_gallery", "monument", "historical_landmark",
+           "church", "park", "garden", "viewpoint", "zoo", "amusement_park"]
 sights = ["tourist_attraction", "museum", "art_gallery", "monument", "historical_landmark", "church"]
 green = ["park", "garden"]
+food = ["restaurant", "bar"]
+services = ["supermarket", "gas_station", "hospital", "tobacco_shop"]
+entertainment = ["shopping_mall", "cinema", "theater"]
 
 # -----------------------------------------------------------------------------
 # Cities: bounding box in decimal degrees (south, west, north, east).

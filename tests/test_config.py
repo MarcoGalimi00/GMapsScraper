@@ -11,7 +11,8 @@ def test_repository_config_loads():
     cfg = load_config(ROOT / "config.toml")
     assert "milan" in cfg.cities
     assert cfg.settings.page_pause_s == (3.0, 7.0)
-    assert len(cfg.categories) == 11
+    assert len(cfg.categories) == 20
+    assert len(cfg.groups["tourism"]) == 11
 
 
 def test_resolve_categories():
