@@ -21,3 +21,4 @@ packages = ["gmaps_scraper"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]          # lets `pytest` import gmaps_scraper and tools without installing
