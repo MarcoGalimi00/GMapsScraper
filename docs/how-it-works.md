@@ -17,6 +17,33 @@ opens). `resolve_categories()` turns `museum @green all` into a list of keys.
 
 **Example on Milan** — `--city milan --categories @tourism`: 49 cells × 11 categories = 539 searches.
 
+### From a city name to a rectangle (`tools/add_city`, `config.load_config`)
+
+Every city in `config.toml` is a centre and a radius:
+
+```toml
+[cities.milan]
+name = "Milan, Italy"
+center = [45.4642, 9.1896]
+radius_km = 8
+```
+
+1. `python -m tools.add_city milan "Milan, Italy" --email ...` asks Nominatim
+   (OpenStreetMap's geocoder) where the city is and keeps only the **point** it
+   returns, usually the town hall or main square. It ignores the administrative
+   boundaries, which can be huge (London 45 × 58 km, Melbourne 125 × 153 km).
+   It writes `name`, `center` and `radius_km` into `config.toml`.
+2. At launch `load_config` turns centre and radius into a rectangle with
+   `geometry.bbox_around`: ± `radius_km` around the centre, i.e. `radius / 111`
+   degrees of latitude and `radius / (111 × cos(lat))` degrees of longitude.
+3. That rectangle decides **where** the scraper searches (the grid below, so the
+   number of searches and the run time) and **what it keeps** (`parse_card`
+   drops places outside it). Cells grow with the square of the radius.
+
+**Example on Milan**: centre (45.4642, 9.1896) ± 8 km → south 45.3921, west 9.0868,
+north 45.5363, east 9.2924: a 16 × 16 km square. With ± 5 km it would be 25 cells,
+with ± 8 km 49.
+
 ### The automatic step (`geometry.auto_step_km`)
 
 1. Metres per pixel = `156543.03 × cos(lat) / 2^zoom`.
@@ -27,15 +54,15 @@ opens). `resolve_categories()` turns `museum @green all` into a list of keys.
 of the visible short side. With 1.0 neighbouring cells just touch, and any error
 in the estimate leaves a gap; with 0.85 they share 15%.
 
-**Example on Milan** (lat 45.465, zoom 15, 1280×900 window): 3.35 m/px, visible
+**Example on Milan** (lat 45.464, zoom 15, 1280×900 window): 3.35 m/px, visible
 area 2.92 × 3.02 km, step = 0.85 × 2.92 = **2.48 km**. Two neighbouring cells
-share 2.92 − 2.48 = 0.45 km. Overlap 1.0 would give 36 cells, 0.7 would give 81.
+share 2.92 − 2.48 = 0.45 km. Overlap 1.0 would give 36 cells, 0.7 would give 64.
 
 | City | Latitude | Automatic step |
 |---|---|---|
 | Singapore | 1.29 | 3.54 km |
 | Rome | 41.89 | 2.64 km |
-| Milan | 45.465 | 2.48 km |
+| Milan | 45.464 | 2.48 km |
 | Stockholm | 59.33 | 1.81 km |
 
 ### The grid (`BBox.grid_centers`)
@@ -44,10 +71,10 @@ share 2.92 − 2.48 = 0.45 km. Overlap 1.0 would give 36 cells, 0.7 would give 8
 half a step inside the south-west corner; two `while` loops add rows and columns
 while the centre stays inside the rectangle (+ half a step).
 
-**Example on Milan**: the rectangle is 0.15° × 111 = 16.7 km tall and
-0.22° × 111 × cos(45.465°) = 17.1 km wide. 16.7 / 2.48 ≈ 6.7 and
-17.1 / 2.48 ≈ 6.9 → 7 rows × 7 columns = **49 cells**, from (45.40117, 9.07593)
-to (45.53523, 9.26707). With `--center-first` the first cell becomes (45.4682, 9.1715).
+**Example on Milan**: the square is 16 × 16 km. 16 / 2.48 ≈ 6.5, so the `while`
+loops fit 7 rows × 7 columns = **49 cells**, from (45.40327, 9.10273) to
+(45.53733, 9.29386). With `--center-first` the first cell becomes (45.4703, 9.1983).
+Rome (± 8 km, step 2.64 km) also has 49 cells.
 
 ## 2. Open the browser (`scraper.run`)
 

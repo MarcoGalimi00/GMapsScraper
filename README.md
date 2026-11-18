@@ -119,15 +119,19 @@ street_art = "street art"            # add any search you like
 [category_groups]     # use as --categories @sights
 sights = ["tourist_attraction", "museum", "art_gallery"]
 
-[cities.milan]                       # a city as an explicit rectangle...
+[cities.milan]                       # a centre and a radius: the square of +/- 8 km around it
 name = "Milan, Italy"
-bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
-
-[cities.paris]                       # ...or as a centre and a radius (square of +/- 8 km)
-name = "Paris, France"
-center = [48.8589, 2.3200]
+center = [45.4642, 9.1896]
 radius_km = 8
+
+[cities.somewhere]                   # or, if you prefer, an explicit rectangle
+name = "Somewhere"
+bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
 ```
+
+The rectangle decides **where** the scraper searches (the grid of search
+centres, so the number of searches and the run time) and **what it keeps**
+(places outside it are dropped).
 
 The config ships with **50 cities** (London, Paris, New York, Tokyo, Rome,
 Milan, …). `python -m gmaps_scraper --list` shows them with their number of cells.
@@ -142,8 +146,8 @@ python -m tools.add_city las_vegas "Las Vegas, USA" --center 36.12 -115.17 --rep
 ```
 
 Centres come from OpenStreetMap (Nominatim) and are the administrative centre,
-not always the tourist one: check them on a map. Seven cities in the shipped
-config (Singapore, New York, Las Vegas, Rio, Cairo, Cancun, Saint Petersburg)
+not always the tourist one: check them on a map. Every city in the shipped config
+is written as centre + radius. Seven of them (Singapore, New York, Las Vegas, Rio, Cairo, Cancun, Saint Petersburg)
 have centres already moved by hand.
 
 ## Output

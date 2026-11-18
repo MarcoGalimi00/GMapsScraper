@@ -2,7 +2,7 @@
 from gmaps_scraper.geometry import BBox
 from gmaps_scraper.parsing import extract_category, parse_card, parse_rating, reparse_row
 
-MILAN = BBox(45.39, 9.06, 45.54, 9.28)
+MILAN = BBox(45.3921, 9.0868, 45.5363, 9.2924)
 STAR = ""   # the star icon Maps puts after the rating
 
 BRERA_TEXT = ("Pinacoteca di Brera\nPinacoteca di Brera\n4.7" + STAR +

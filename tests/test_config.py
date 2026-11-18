@@ -28,7 +28,8 @@ def test_resolve_categories():
 def test_repository_has_50_cities():
     cfg = load_config(ROOT / "config.toml")
     assert len(cfg.cities) == 50
-    assert cfg.cities["venice"].radius_km == 5 and cfg.cities["milan"].radius_km is None
+    assert cfg.cities["venice"].radius_km == 5 and cfg.cities["milan"].radius_km == 8
+    assert all(c.center for c in cfg.cities.values())        # every city is centre + radius
 
 
 def test_city_from_center_and_radius(tmp_path):

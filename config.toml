@@ -82,11 +82,13 @@ entertainment = ["shopping_mall", "cinema", "theater"]
 # -----------------------------------------------------------------------------
 [cities.milan]
 name = "Milan, Italy"
-bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
+center = [45.4642, 9.1896]
+radius_km = 8
 
 [cities.rome]
 name = "Rome, Italy"
-bbox = { south = 41.79, west = 12.37, north = 41.99, east = 12.62 }   # roughly inside the ring road (GRA)
+center = [41.8933, 12.4829]
+radius_km = 8
 
 [cities.london]
 name = "London, United Kingdom"

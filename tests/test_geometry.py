@@ -1,6 +1,6 @@
 from gmaps_scraper.geometry import BBox, auto_step_km, order_center_first
 
-MILAN = BBox(45.39, 9.06, 45.54, 9.28)
+MILAN = BBox(45.3921, 9.0868, 45.5363, 9.2924)     # config.toml: center [45.4642, 9.1896], radius 8 km
 VIEWPORT = {"width": 1280, "height": 900}
 
 
@@ -9,15 +9,16 @@ def test_milan_automatic_step():
 
 
 def test_milan_grid_is_7_by_7():
+    # a 16 x 16 km square with a 2.48 km step: 16 / 2.48 = 6.5 -> 7 rows and 7 columns
     cells = MILAN.grid_centers(2.48)
     assert len(cells) == 49
-    assert cells[0] == (45.40117, 9.07593)     # half a step inside the south-west corner
-    assert cells[-1] == (45.53523, 9.26707)
+    assert cells[0] == (45.40327, 9.10273)     # half a step inside the south-west corner
+    assert cells[-1] == (45.53733, 9.29386)
 
 
 def test_step_changes_cell_count():
     assert len(MILAN.grid_centers(2.92)) == 36   # overlap 1.0
-    assert len(MILAN.grid_centers(2.04)) == 81   # overlap 0.7
+    assert len(MILAN.grid_centers(2.04)) == 64   # overlap 0.7
 
 
 def test_higher_zoom_halves_the_step():
@@ -26,7 +27,7 @@ def test_higher_zoom_halves_the_step():
 
 def test_center_first():
     first = order_center_first(MILAN.grid_centers(2.48), MILAN)[0]
-    assert first == (45.4682, 9.1715)
+    assert first == (45.4703, 9.1983)
 
 
 def test_contains():
