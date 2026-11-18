@@ -7,10 +7,6 @@ ranked by popularity.
 
 The scraper writes a JSONL file (one JSON object per line); the converter
 `tools/jsonl_to_xlsx.py` turns it into the Excel file, which is the final output.
-review count so places can be ranked by popularity.
-
-The scraper writes a JSONL file (one JSON object per line); the converter
-`tools/jsonl_to_xlsx.py` turns it into the Excel file, which is the final output.
 
 Cities and categories live in [`config.toml`](config.toml); you pick them at launch:
 
