@@ -15,7 +15,7 @@ python -m gmaps_scraper --city milan --categories tourist_attraction museum
 ```
 
 > **Before you use it.** Automated access to Google Maps may conflict with
-> Google's Terms of Service. This project is for personal study: it searches at
+> Google's Terms of Service. This project is for personal, non-commercial use: it searches at
 > a human pace, never tries to bypass Google's anti-robot checks (it stops
 > when one appears) and does not rotate IPs or disguise the browser. For
 > production use, consider the official Google Places API.
