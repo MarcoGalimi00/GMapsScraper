@@ -11,7 +11,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .geometry import BBox
+from .geometry import BBox, bbox_around
 
 
 class ConfigError(ValueError):
@@ -38,6 +38,8 @@ class City:
     code: str
     name: str
     bbox: BBox
+    center: tuple[float, float] | None = None   # set when the city is written as center + radius_km
+    radius_km: float | None = None
 
 
 @dataclass(frozen=True)
@@ -67,6 +69,24 @@ class Config:
             else:
                 raise ConfigError(f"unknown category '{token}'. Known: {', '.join(sorted(self.categories))}")
         return list(dict.fromkeys(keys))     # dict keeps insertion order: cheap de-duplication
+
+
+def _city(code: str, raw: dict) -> City:
+    """A city is written either as an explicit `bbox`, or as `center` + `radius_km`
+    (the square of +/- radius_km around the centre). An explicit bbox wins."""
+    name = str(raw.get("name", code))
+    if "bbox" in raw:
+        return City(code, name, _bbox(code, raw["bbox"]))
+    if "center" in raw and "radius_km" in raw:
+        try:
+            lat, lng = (float(x) for x in raw["center"])
+            radius = float(raw["radius_km"])
+        except (TypeError, ValueError) as exc:
+            raise ConfigError(f"city '{code}': center must be [lat, lng] and radius_km a number") from exc
+        if not (-90 < lat < 90 and -180 <= lng <= 180 and radius > 0):
+            raise ConfigError(f"city '{code}': center or radius_km out of range")
+        return City(code, name, bbox_around(lat, lng, radius), (lat, lng), radius)
+    raise ConfigError(f"city '{code}': give either bbox or center + radius_km")
 
 
 def _bbox(code: str, raw: dict) -> BBox:
@@ -105,8 +125,5 @@ def load_config(path: Path) -> Config:
         if unknown:
             raise ConfigError(f"group '{name}' uses unknown categories: {', '.join(unknown)}")
 
-    cities = {
-        code: City(code=code, name=str(raw.get("name", code)), bbox=_bbox(code, raw.get("bbox", {})))
-        for code, raw in data.get("cities", {}).items()
-    }
+    cities = {code: _city(code, raw) for code, raw in data.get("cities", {}).items()}
     return Config(settings=settings, categories=categories, groups=groups, cities=cities)

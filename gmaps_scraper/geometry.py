@@ -53,6 +53,14 @@ class BBox:
         return centers
 
 
+def bbox_around(lat: float, lng: float, radius_km: float) -> BBox:
+    """Square of +/- radius_km around a point. The longitude span is wider than the
+    latitude span, because one degree of longitude is 111 km x cos(latitude)."""
+    dlat = radius_km / KM_PER_DEG_LAT
+    dlng = radius_km / (KM_PER_DEG_LAT * math.cos(math.radians(lat)))
+    return BBox(round(lat - dlat, 4), round(lng - dlng, 4), round(lat + dlat, 4), round(lng + dlng, 4))
+
+
 def meters_per_pixel(lat: float, zoom: int) -> float:
     """Standard web-map formula: size of one screen pixel on the ground."""
     return 156543.03 * math.cos(math.radians(lat)) / 2**zoom

@@ -5,7 +5,7 @@
 # categories can be searched and how the browser behaves. Nothing about cities
 # or categories is hard-coded in the Python files.
 #
-# To add a city:     add a [cities.<code>] table (tools/find_city_bbox.py prints them).
+# To add a city:     python -m tools.add_city <code> "<City, Country>" --email you@example.com
 # To add a category: add a line under [categories].
 # Then pick them at launch time:
 #     python -m gmaps_scraper --city milan --categories museum park
@@ -71,8 +71,14 @@ services = ["supermarket", "gas_station", "hospital", "tobacco_shop"]
 entertainment = ["shopping_mall", "cinema", "theater"]
 
 # -----------------------------------------------------------------------------
-# Cities: bounding box in decimal degrees (south, west, north, east).
-# The box decides the grid of search centres and which places are kept.
+# Cities. Two ways to write one:
+#   bbox = { south = .., west = .., north = .., east = .. }   explicit rectangle
+#   center = [lat, lng] and radius_km = 8                      square of +/- 8 km
+# The rectangle decides the grid of search centres and which places are kept.
+# Add or update a city with:
+#   python -m tools.add_city turin "Turin, Italy" --email you@example.com
+# Centres come from OpenStreetMap (Nominatim): the administrative centre, not
+# always the tourist one. Check them on a map; a few are already moved by hand.
 # -----------------------------------------------------------------------------
 [cities.milan]
 name = "Milan, Italy"
@@ -81,3 +87,243 @@ bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
 [cities.rome]
 name = "Rome, Italy"
 bbox = { south = 41.79, west = 12.37, north = 41.99, east = 12.62 }   # roughly inside the ring road (GRA)
+
+[cities.london]
+name = "London, United Kingdom"
+center = [51.5074, -0.1278]
+radius_km = 8
+
+[cities.paris]
+name = "Paris, France"
+center = [48.8589, 2.3200]
+radius_km = 8
+
+[cities.singapore]
+name = "Singapore"
+center = [1.2900, 103.8450]   # moved by hand to Marina Bay: Nominatim gives the centre of the island
+radius_km = 8
+
+[cities.new_york]
+name = "New York City, USA"
+center = [40.7580, -73.9855]   # moved by hand to Midtown: covers Central Park and Lower Manhattan
+radius_km = 8
+
+[cities.tokyo]
+name = "Tokyo, Japan"
+center = [35.6769, 139.7639]
+radius_km = 8
+
+[cities.prague]
+name = "Prague, Czechia"
+center = [50.0875, 14.4213]
+radius_km = 8
+
+[cities.amsterdam]
+name = "Amsterdam, Netherlands"
+center = [52.3731, 4.8925]
+radius_km = 8
+
+[cities.miami]
+name = "Miami, Florida, USA"
+center = [25.7742, -80.1936]
+radius_km = 8
+
+[cities.los_angeles]
+name = "Los Angeles, California, USA"
+center = [34.0537, -118.2428]
+radius_km = 8
+
+[cities.barcelona]
+name = "Barcelona, Spain"
+center = [41.3826, 2.1771]
+radius_km = 8
+
+[cities.las_vegas]
+name = "Las Vegas, Nevada, USA"
+center = [36.1200, -115.1700]   # moved by hand to the Strip
+radius_km = 8
+
+[cities.vienna]
+name = "Vienna, Austria"
+center = [48.2084, 16.3725]
+radius_km = 8
+
+[cities.cancun]
+name = "Cancun, Quintana Roo, Mexico"
+center = [21.1200, -86.7900]   # moved by hand between downtown and the Hotel Zone
+radius_km = 9
+
+[cities.berlin]
+name = "Berlin, Germany"
+center = [52.5174, 13.3951]
+radius_km = 8
+
+[cities.madrid]
+name = "Madrid, Spain"
+center = [40.4168, -3.7035]
+radius_km = 8
+
+[cities.lisbon]
+name = "Lisbon, Portugal"
+center = [38.7078, -9.1366]
+radius_km = 8
+
+[cities.athens]
+name = "Athens, Greece"
+center = [37.9756, 23.7348]
+radius_km = 8
+
+[cities.venice]
+name = "Venice, Italy"
+center = [45.4372, 12.3346]
+radius_km = 5
+
+[cities.florence]
+name = "Florence, Italy"
+center = [43.7698, 11.2556]
+radius_km = 5
+
+[cities.dublin]
+name = "Dublin, Ireland"
+center = [53.3494, -6.2606]
+radius_km = 8
+
+[cities.san_francisco]
+name = "San Francisco, California, USA"
+center = [37.7879, -122.4075]
+radius_km = 8
+
+[cities.sydney]
+name = "Sydney, Australia"
+center = [-33.8698, 151.2083]
+radius_km = 8
+
+[cities.cairo]
+name = "Cairo, Egypt"
+center = [30.0200, 31.2000]   # moved by hand: with 12 km it reaches from Giza to the Citadel
+radius_km = 12
+
+[cities.budapest]
+name = "Budapest, Hungary"
+center = [47.4979, 19.0402]
+radius_km = 8
+
+[cities.edinburgh]
+name = "Edinburgh, United Kingdom"
+center = [55.9533, -3.1884]
+radius_km = 8
+
+[cities.toronto]
+name = "Toronto, Canada"
+center = [43.6535, -79.3839]
+radius_km = 8
+
+[cities.vancouver]
+name = "Vancouver, Canada"
+center = [49.2609, -123.1140]
+radius_km = 8
+
+[cities.rio_de_janeiro]
+name = "Rio de Janeiro, Brazil"
+center = [-22.9400, -43.2000]   # moved by hand between Centro, Cristo Redentor and Ipanema
+radius_km = 8
+
+[cities.buenos_aires]
+name = "Buenos Aires, Argentina"
+center = [-34.6096, -58.3888]
+radius_km = 8
+
+[cities.marrakech]
+name = "Marrakech, Morocco"
+center = [31.6258, -7.9892]
+radius_km = 8
+
+[cities.cape_town]
+name = "Cape Town, South Africa"
+center = [-33.9288, 18.4172]
+radius_km = 8
+
+[cities.saint_petersburg]
+name = "Saint Petersburg, Russia"
+center = [59.9386, 30.3141]   # moved by hand to the historic centre
+radius_km = 8
+
+[cities.krakow]
+name = "Krakow, Poland"
+center = [50.0469, 19.9972]
+radius_km = 8
+
+[cities.munich]
+name = "Munich, Germany"
+center = [48.1371, 11.5754]
+radius_km = 8
+
+[cities.seville]
+name = "Seville, Spain"
+center = [37.3886, -5.9953]
+radius_km = 6
+
+[cities.porto]
+name = "Porto, Portugal"
+center = [41.1502, -8.6103]
+radius_km = 8
+
+[cities.orlando]
+name = "Orlando, Florida, USA"
+center = [28.5421, -81.3790]
+radius_km = 8
+
+[cities.chicago]
+name = "Chicago, Illinois, USA"
+center = [41.8756, -87.6244]
+radius_km = 8
+
+[cities.nice]
+name = "Nice, France"
+center = [43.7009, 7.2684]
+radius_km = 8
+
+[cities.dubrovnik]
+name = "Dubrovnik, Croatia"
+center = [42.6491, 18.0940]
+radius_km = 3
+
+[cities.reykjavik]
+name = "Reykjavik, Iceland"
+center = [64.1460, -21.9422]
+radius_km = 5
+
+[cities.montreal]
+name = "Montreal, Canada"
+center = [45.5032, -73.5698]
+radius_km = 8
+
+[cities.auckland]
+name = "Auckland, New Zealand"
+center = [-36.8521, 174.7632]
+radius_km = 8
+
+[cities.melbourne]
+name = "Melbourne, Australia"
+center = [-37.8142, 144.9632]
+radius_km = 8
+
+[cities.copenhagen]
+name = "Copenhagen, Denmark"
+center = [55.6867, 12.5701]
+radius_km = 8
+
+[cities.stockholm]
+name = "Stockholm, Sweden"
+center = [59.3251, 18.0711]
+radius_km = 8
+
+[cities.warsaw]
+name = "Warsaw, Poland"
+center = [52.2334, 21.0711]
+radius_km = 8
+
+[cities.bruges]
+name = "Bruges, Belgium"
+center = [51.2086, 3.2268]
+radius_km = 2.5

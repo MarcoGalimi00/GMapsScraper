@@ -2,4 +2,4 @@
 #   playwright install chromium
 playwright>=1.65,<2
 openpyxl>=3.1      # tools/jsonl_to_xlsx.py
-requests>=2.31     # tools/find_city_bbox.py
+requests>=2.31     # tools/add_city.py (city lookup)

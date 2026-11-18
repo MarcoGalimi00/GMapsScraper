@@ -119,16 +119,32 @@ street_art = "street art"            # add any search you like
 [category_groups]     # use as --categories @sights
 sights = ["tourist_attraction", "museum", "art_gallery"]
 
-[cities.milan]
+[cities.milan]                       # a city as an explicit rectangle...
 name = "Milan, Italy"
 bbox = { south = 45.39, west = 9.06, north = 45.54, east = 9.28 }
+
+[cities.paris]                       # ...or as a centre and a radius (square of +/- 8 km)
+name = "Paris, France"
+center = [48.8589, 2.3200]
+radius_km = 8
 ```
 
-To add a city, generate its block:
+The config ships with **50 cities** (London, Paris, New York, Tokyo, Rome,
+Milan, …). `python -m gmaps_scraper --list` shows them with their number of cells.
+
+To add a city, or update one, let the tool look up its centre and write the
+block into `config.toml` for you:
 
 ```bash
-python -m tools.find_city_bbox turin "Turin, Italy" --email you@example.com --radius-km 6
+python -m tools.add_city turin "Turin, Italy" --email you@example.com            # +/- 8 km
+python -m tools.add_city venice "Venice, Italy" --radius-km 4 --replace --email you@example.com
+python -m tools.add_city las_vegas "Las Vegas, USA" --center 36.12 -115.17 --replace   # no lookup
 ```
+
+Centres come from OpenStreetMap (Nominatim) and are the administrative centre,
+not always the tourist one: check them on a map. Seven cities in the shipped
+config (Singapore, New York, Las Vegas, Rio, Cairo, Cancun, Saint Petersburg)
+have centres already moved by hand.
 
 ## Output
 
@@ -165,7 +181,7 @@ All run from the repository root:
 | `python -m tools.merge_jsonl raw/milan_*.jsonl --out raw/milan_merged.jsonl` | merge runs, one row per place |
 | `python -m tools.reparse_jsonl FILE --out FILE2` | recompute category/rating/reviews from the raw texts, no scraping |
 | `python -m tools.jsonl_to_xlsx [FILE]` | **final step**: Excel workbook, most reviewed first, plus a summary sheet (default: newest file in `raw/`) |
-| `python -m tools.find_city_bbox CODE "City, Country" --email …` | `[cities.CODE]` block for the config |
+| `python -m tools.add_city CODE "City, Country" --email …` | look up a city and write its `[cities.CODE]` block into `config.toml` |
 
 ## Project layout
 
@@ -178,16 +194,16 @@ gmaps_scraper/
   parsing.py    raw card -> clean row (pure Python, tested offline)
   scraper.py    category x cell loop, de-duplication, checkpoints
   storage.py    JSONL read/write/merge
-tools/          merge, re-parse, Excel export, city rectangle
+tools/          Excel export, merge, re-parse, add a city to the config
 tests/          pytest, no browser or network needed
-docs/           how-it-works.md, roadmap.md
-config.toml     cities, categories, settings
+docs/           how-it-works.md
+config.toml     50 cities, 20 categories, groups, settings
 ```
 
 ## Known limits
 
 - Maps lists stop at about **120 results per search**: in dense categories
-  (parks, churches) a cell can hold more. See [docs/roadmap.md](docs/roadmap.md).
+  (parks, churches, restaurants) a cell can hold more, so those lists can be incomplete.
 - `side_panel_px` and `overlap` are estimates, not measurements.
 - Not resumable: a stopped run restarts from zero (the partial file keeps what was found).
 - The page structure can change: if every search returns zero cards, check the selectors in `browser.py`.

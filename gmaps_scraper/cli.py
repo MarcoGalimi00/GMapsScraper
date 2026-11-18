@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from .config import Config, ConfigError, load_config
-from .geometry import BBox
+from .geometry import BBox, auto_step_km
 from .scraper import plan_run, run
 from .storage import write_jsonl
 
@@ -43,10 +43,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def print_catalogue(cfg: Config) -> None:
-    print("Cities:")
+    s = cfg.settings
+    print("Cities (cells at the automatic step):")
     for code, city in sorted(cfg.cities.items()):
         b = city.bbox
-        print(f"  {code:15} {city.name}  [{b.south}, {b.west}, {b.north}, {b.east}]")
+        cells = len(b.grid_centers(auto_step_km(b.mid_lat, s.zoom, s.viewport, s.side_panel_px, s.overlap)))
+        shape = f"+/-{city.radius_km:g} km" if city.radius_km else "bbox"
+        print(f"  {code:17} {cells:4} cells  {shape:11} {city.name}")
     print("Categories:")
     for key, text in cfg.categories.items():
         print(f"  {key:22} searches \"{text}\"")
