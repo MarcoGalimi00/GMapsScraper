@@ -1,7 +1,6 @@
 # GMapsScraper
 
-Collect places of interest (sights, museums, parks, churches…) from Google Maps,
-one city and a chosen set of categories at a time. The result is a JSONL file
+Collect places of interest from Google Maps, one city and a chosen set of categories at a time. The result is a JSONL file
 with one row per place, keyed by Google's `place_id`, including rating and
 review count so places can be ranked by popularity.
 
