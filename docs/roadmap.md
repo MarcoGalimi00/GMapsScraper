@@ -12,12 +12,6 @@ Idea: split a cell into 4 sub-cells when `cards >= 118` **and** `new >= 5`.
 On Milan that is 216 cells → 864 extra searches (~7 h). Measure first on 2–3
 dense `park` cells.
 
-## Supabase loader
-
-`sql/gmaps_places.sql` describes the planned table (primary key `place_id`).
-Nothing loads it yet: the data must be validated first. Note for the loader: an
-upsert would overwrite `queries` instead of uniting it; merge before loading.
-
 ## Filtering non-sights
 
 `park` searches also return parking lots ("Parking lot", "Free parking lot",

@@ -143,11 +143,20 @@ Every search logs one line:
 Every `checkpoint_every` searches the whole of `rows` is rewritten to
 `<city>_<time>_partial.jsonl`; then a random pause in `page_pause_s`.
 
-## 8. Save
+## 8. Save, then convert to Excel
 
 When the loop ends — or on Ctrl+C, or on `/sorry/` — the browser closes and
 `write_jsonl` writes `<city>_<time>.jsonl`, stamping `last_scraped_at`. Any other
 exception leaves only the last partial file.
+
+Then the converter turns the JSONL into the final Excel workbook:
+
+```bash
+python -m tools.jsonl_to_xlsx raw/milan_20261117_2057.jsonl   # -> raw/milan_20261117_2057.xlsx
+```
+
+Sheet "Places" has one row per place, most reviewed first; sheet "Summary" counts
+ratings, review counts, categories and images.
 
 **Example on Milan** (17 Nov 2026, all 11 categories): 539 searches in 4 h 19 min
 (~29 s each), 4,631 places, no anti-robot check.

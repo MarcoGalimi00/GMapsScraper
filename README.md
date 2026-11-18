@@ -1,8 +1,16 @@
 # GMapsScraper
 
-Collect places of interest from Google Maps, one city and a chosen set of categories at a time. The result is a JSONL file
-with one row per place, keyed by Google's `place_id`, including rating and
+Collect places of interest from Google Maps, one city and a chosen set of
+categories at a time, and save them to an **Excel workbook**: one row per place,
+keyed by Google's `place_id`, with rating and review count so places can be
+ranked by popularity.
+
+The scraper writes a JSONL file (one JSON object per line); the converter
+`tools/jsonl_to_xlsx.py` turns it into the Excel file, which is the final output.
 review count so places can be ranked by popularity.
+
+The scraper writes a JSONL file (one JSON object per line); the converter
+`tools/jsonl_to_xlsx.py` turns it into the Excel file, which is the final output.
 
 Cities and categories live in [`config.toml`](config.toml); you pick them at launch:
 
@@ -26,6 +34,8 @@ config.toml ──► city rectangle ──► grid of search centres (e.g. Mila
                      parse each card ─► drop ads / out-of-area ─► de-duplicate by place_id
                                           │
                                 raw/<city>_<YYYYmmdd_HHMM>.jsonl
+                                          │
+                     python -m tools.jsonl_to_xlsx ─► raw/<city>_<YYYYmmdd_HHMM>.xlsx   (final output)
 ```
 
 Full walkthrough, from launch to clean row: [docs/how-it-works.md](docs/how-it-works.md).
@@ -44,6 +54,15 @@ playwright install chromium
 Development (tests): `pip install -r requirements-dev.txt`, then `pytest`.
 
 ## Run
+
+A run has two steps: scrape, then convert to Excel.
+
+```bash
+python -m gmaps_scraper --city milan --categories tourist_attraction    # 1. scrape -> raw/milan_<time>.jsonl
+python -m tools.jsonl_to_xlsx                                            # 2. newest JSONL -> raw/milan_<time>.xlsx
+```
+
+More ways to launch the scraper:
 
 ```bash
 python -m gmaps_scraper --list                                   # cities, categories, groups in the config
@@ -114,7 +133,12 @@ python -m tools.find_city_bbox turin "Turin, Italy" --email you@example.com --ra
 
 ## Output
 
-One JSON object per line in `raw/<city>_<YYYYmmdd_HHMM>.jsonl` (UTC time). While
+The final output is the Excel workbook made by `tools.jsonl_to_xlsx`:
+
+- sheet **Places**: one row per place, most reviewed first, with filters and clickable Maps links;
+- sheet **Summary**: how many places have a rating, a review count, a category, an image; counts per Google category and per search category.
+
+Its columns come from the intermediate JSONL file: one JSON object per line in `raw/<city>_<YYYYmmdd_HHMM>.jsonl` (UTC time). While
 running, `raw/<…>_partial.jsonl` is rewritten every `checkpoint_every` searches.
 
 | Field | Example | Notes |
@@ -141,7 +165,7 @@ All run from the repository root:
 |---|---|
 | `python -m tools.merge_jsonl raw/milan_*.jsonl --out raw/milan_merged.jsonl` | merge runs, one row per place |
 | `python -m tools.reparse_jsonl FILE --out FILE2` | recompute category/rating/reviews from the raw texts, no scraping |
-| `python -m tools.jsonl_to_xlsx FILE` | Excel workbook, most reviewed first, plus a summary sheet |
+| `python -m tools.jsonl_to_xlsx [FILE]` | **final step**: Excel workbook, most reviewed first, plus a summary sheet (default: newest file in `raw/`) |
 | `python -m tools.find_city_bbox CODE "City, Country" --email …` | `[cities.CODE]` block for the config |
 
 ## Project layout
@@ -158,7 +182,6 @@ gmaps_scraper/
 tools/          merge, re-parse, Excel export, city rectangle
 tests/          pytest, no browser or network needed
 docs/           how-it-works.md, roadmap.md
-sql/            planned Supabase table (not applied by any script)
 config.toml     cities, categories, settings
 ```
 

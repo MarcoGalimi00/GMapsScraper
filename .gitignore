@@ -13,8 +13,6 @@ out/
 *.xlsx
 citta_bbox.json
 
-# Secrets
-.env
 
 # OS / editors
 .DS_Store
